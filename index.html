@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XO Analytics — Turn Your Data Into Exponential Growth</title>
+    <meta name="description" content="XO Analytics is a powerful data analytics platform for Shopify businesses. Get AI-powered weekly insights, optimize ad spend, and achieve 30%+ profit growth.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* === Reset & Base === */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #07080d;
+            --bg-secondary: #0d0f17;
+            --bg-card: #111827;
+            --bg-card-hover: #1a2236;
+            --text-primary: #f0f2f8;
+            --text-secondary: #8b95b0;
+            --text-muted: #5a6380;
+            --accent: #3b82f6;
+            --accent-light: #60a5fa;
+            --accent-dark: #2563eb;
+            --accent-glow: rgba(59, 130, 246, 0.15);
+            --gradient: linear-gradient(135deg, #2563eb, #38bdf8);
+            --gradient-text: linear-gradient(135deg, #60a5fa, #38bdf8);
+            --border: rgba(255, 255, 255, 0.06);
+            --border-accent: rgba(59, 130, 246, 0.2);
+            --radius: 12px;
+            --radius-lg: 20px;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        a { color: inherit; text-decoration: none; }
+        img { max-width: 100%; display: block; }
+
+        .container {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* === Animated Background === */
+        .bg-grid {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-glow {
+            position: fixed;
+            width: 600px; height: 600px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.07;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-glow--1 { top: -200px; left: -100px; background: var(--accent); }
+        .bg-glow--2 { bottom: -200px; right: -100px; background: #38bdf8; }
+
+        /* === Header === */
+        .header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            padding: 16px 0;
+            transition: background 0.3s, backdrop-filter 0.3s, box-shadow 0.3s;
+        }
+
+        .header.scrolled {
+            background: rgba(7, 8, 13, 0.85);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 1px 0 var(--border);
+        }
+
+        .header__inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo__mark {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px; height: 32px;
+            background: var(--gradient);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .nav { display: flex; align-items: center; gap: 32px; }
+
+        .nav__link {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            transition: color 0.2s;
+            font-weight: 500;
+        }
+
+        .nav__link:hover { color: var(--text-primary); }
+
+        .nav__toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .nav__toggle svg { width: 24px; height: 24px; }
+
+        /* === Buttons === */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.25s;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+        }
+
+        .btn--primary {
+            background: var(--gradient);
+            color: #fff;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn--primary:hover {
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .btn--outline {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn--outline:hover {
+            border-color: var(--accent);
+            background: var(--accent-glow);
+        }
+
+        .btn--sm { padding: 10px 20px; font-size: 0.85rem; }
+
+        /* === Section Shared === */
+        .section {
+            position: relative;
+            z-index: 1;
+            padding: 120px 0;
+        }
+
+        .section__label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--accent-light);
+            background: var(--accent-glow);
+            border: 1px solid var(--border-accent);
+            margin-bottom: 20px;
+        }
+
+        .section__title {
+            font-size: clamp(2rem, 4vw, 2.75rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.15;
+            margin-bottom: 16px;
+        }
+
+        .section__subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        .section__header {
+            text-align: center;
+            margin-bottom: 64px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* === Hero === */
+        .hero {
+            padding: 180px 0 120px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero__title {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            max-width: 800px;
+        }
+
+        .hero__title span {
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero__subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 560px;
+            margin-bottom: 40px;
+            line-height: 1.7;
+        }
+
+        .hero__actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .hero__metric {
+            display: flex;
+            gap: 48px;
+            margin-top: 80px;
+            padding-top: 48px;
+            border-top: 1px solid var(--border);
+        }
+
+        .metric {
+            text-align: center;
+        }
+
+        .metric__value {
+            font-size: 2rem;
+            font-weight: 800;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .metric__label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* === Pain Points === */
+        .pain-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .pain-card {
+            padding: 32px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            transition: all 0.3s;
+        }
+
+        .pain-card:hover {
+            border-color: var(--border-accent);
+            background: var(--bg-card-hover);
+            transform: translateY(-2px);
+        }
+
+        .pain-card__icon {
+            width: 44px; height: 44px;
+            border-radius: 10px;
+            background: var(--accent-glow);
+            border: 1px solid var(--border-accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        .pain-card__title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .pain-card__problem {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .pain-card__solution {
+            font-size: 0.85rem;
+            color: var(--accent-light);
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+            line-height: 1.6;
+        }
+
+        /* === How It Works === */
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            position: relative;
+        }
+
+        .steps::before {
+            content: '';
+            position: absolute;
+            top: 44px;
+            left: calc(16.67% + 22px);
+            right: calc(16.67% + 22px);
+            height: 2px;
+            background: var(--gradient);
+            opacity: 0.3;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step__number {
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            background: var(--gradient);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step__title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .step__desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* === Features === */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-card {
+            padding: 36px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: var(--gradient);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .feature-card:hover {
+            border-color: var(--border-accent);
+            background: var(--bg-card-hover);
+            transform: translateY(-2px);
+        }
+
+        .feature-card:hover::before { opacity: 1; }
+
+        .feature-card__icon {
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            background: var(--accent-glow);
+            border: 1px solid var(--border-accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .feature-card__icon svg {
+            width: 24px; height: 24px;
+            stroke: var(--accent-light);
+            fill: none;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .feature-card__title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .feature-card__desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* === Use Cases === */
+        .usecase-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .usecase-card {
+            padding: 32px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            display: flex;
+            gap: 20px;
+            transition: all 0.3s;
+        }
+
+        .usecase-card:hover {
+            border-color: var(--border-accent);
+            background: var(--bg-card-hover);
+        }
+
+        .usecase-card__num {
+            flex-shrink: 0;
+            width: 36px; height: 36px;
+            border-radius: 8px;
+            background: var(--accent-glow);
+            border: 1px solid var(--border-accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--accent-light);
+        }
+
+        .usecase-card__title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .usecase-card__desc {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* === CTA === */
+        .cta {
+            text-align: center;
+            padding: 100px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta__box {
+            padding: 80px 60px;
+            border-radius: var(--radius-lg);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta__box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: var(--gradient);
+        }
+
+        .cta__glow {
+            position: absolute;
+            top: -150px; left: 50%;
+            transform: translateX(-50%);
+            width: 500px; height: 300px;
+            background: var(--accent);
+            filter: blur(120px);
+            opacity: 0.08;
+            pointer-events: none;
+        }
+
+        .cta__title {
+            font-size: clamp(2rem, 4vw, 2.5rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .cta__desc {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            margin-bottom: 36px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.7;
+            position: relative;
+        }
+
+        .cta__actions {
+            position: relative;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        /* === Footer === */
+        .footer {
+            position: relative;
+            z-index: 1;
+            padding: 40px 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer__inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .footer__copy {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .footer__email a {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            transition: color 0.2s;
+        }
+
+        .footer__email a:hover { color: var(--accent-light); }
+
+        /* === Scroll Animations === */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: none;
+        }
+
+        /* === Responsive === */
+        @media (max-width: 768px) {
+            .nav { display: none; }
+            .nav.open {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 60px; left: 0; right: 0;
+                background: rgba(7, 8, 13, 0.97);
+                backdrop-filter: blur(20px);
+                padding: 24px;
+                gap: 16px;
+                border-bottom: 1px solid var(--border);
+            }
+            .nav__toggle { display: block; }
+
+            .hero { padding: 140px 0 80px; }
+            .hero__metric { gap: 24px; flex-wrap: wrap; justify-content: center; }
+
+            .section { padding: 80px 0; }
+
+            .steps { grid-template-columns: 1fr; gap: 40px; }
+            .steps::before { display: none; }
+
+            .pain-grid,
+            .features-grid { grid-template-columns: 1fr; }
+
+            .usecase-grid { grid-template-columns: 1fr; }
+
+            .cta__box { padding: 48px 24px; }
+
+            .footer__inner { flex-direction: column; gap: 12px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Background Effects -->
+<div class="bg-grid"></div>
+<div class="bg-glow bg-glow--1"></div>
+<div class="bg-glow bg-glow--2"></div>
+
+<!-- Header -->
+<header class="header" id="header">
+    <div class="container">
+        <div class="header__inner">
+            <a href="#" class="logo">
+                <span class="logo__mark">XO</span>
+                Analytics
+            </a>
+            <button class="nav__toggle" onclick="document.querySelector('.nav').classList.toggle('open')" aria-label="Toggle menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <line x1="3" y1="12" x2="21" y2="12"/>
+                    <line x1="3" y1="18" x2="21" y2="18"/>
+                </svg>
+            </button>
+            <nav class="nav">
+                <a href="#problems" class="nav__link">Problems We Solve</a>
+                <a href="#features" class="nav__link">Features</a>
+                <a href="#how-it-works" class="nav__link">How It Works</a>
+                <a href="#use-cases" class="nav__link">Use Cases</a>
+                <a href="mailto:services@xo-analytics.com" class="btn btn--primary btn--sm">Get Started</a>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<!-- Hero -->
+<section class="hero container">
+    <div class="section__label">AI-Powered Analytics for Shopify</div>
+    <h1 class="hero__title fade-up">Turn Your Data Into <span>Exponential Growth</span></h1>
+    <p class="hero__subtitle fade-up">Connect your accounts and get AI-powered weekly insights that help you optimize ad spend, identify growth opportunities, and boost profits.</p>
+    <div class="hero__actions fade-up">
+        <a href="mailto:services@xo-analytics.com" class="btn btn--primary">Get Started &rarr;</a>
+        <a href="#features" class="btn btn--outline">Learn More</a>
+    </div>
+    <div class="hero__metric fade-up">
+        <div class="metric">
+            <div class="metric__value">30%+</div>
+            <div class="metric__label">Profit increase in 3 months</div>
+        </div>
+        <div class="metric">
+            <div class="metric__value">Weekly</div>
+            <div class="metric__label">AI-generated insights</div>
+        </div>
+        <div class="metric">
+            <div class="metric__value">5 min</div>
+            <div class="metric__label">Setup time</div>
+        </div>
+    </div>
+</section>
+
+<!-- Pain Points -->
+<section class="section" id="problems">
+    <div class="container">
+        <div class="section__header fade-up">
+            <div class="section__label">Why XO Analytics</div>
+            <h2 class="section__title">Problems We Solve</h2>
+            <p class="section__subtitle">Shopify businesses with $20k+ monthly revenue face real data challenges. Here's how we fix them.</p>
+        </div>
+        <div class="pain-grid">
+            <div class="pain-card fade-up">
+                <div class="pain-card__icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/><path d="M9 10h.01M15 10h.01M8 15s1.5 2 4 2 4-2 4-2"/></svg>
+                </div>
+                <h3 class="pain-card__title">Data Overload</h3>
+                <p class="pain-card__problem">You generate tons of data from Shopify, ad platforms, and CRM &mdash; but making sense of it all feels impossible.</p>
+                <p class="pain-card__solution">XO Analytics automatically pulls and presents your data in a clear, actionable dashboard.</p>
+            </div>
+            <div class="pain-card fade-up">
+                <div class="pain-card__icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+                </div>
+                <h3 class="pain-card__title">Ineffective Teams</h3>
+                <p class="pain-card__problem">Your analytics and marketing teams struggle to find real growth opportunities hidden in the noise.</p>
+                <p class="pain-card__solution">Our platform delivers actionable insights and recommendations so your team knows exactly where to focus.</p>
+            </div>
+            <div class="pain-card fade-up">
+                <div class="pain-card__icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                </div>
+                <h3 class="pain-card__title">Lack of Overview</h3>
+                <p class="pain-card__problem">Business owners have a blurred vision of their company's performance across channels and products.</p>
+                <p class="pain-card__solution">Get a clear, comprehensive overview of your entire business at a single glance.</p>
+            </div>
+            <div class="pain-card fade-up">
+                <div class="pain-card__icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+                </div>
+                <h3 class="pain-card__title">Low ROAS</h3>
+                <p class="pain-card__problem">You're spending on ads but don't know which campaigns actually drive revenue and which waste budget.</p>
+                <p class="pain-card__solution">XO Analytics identifies exactly where to optimize your ad spend for maximum return.</p>
+            </div>
+            <div class="pain-card fade-up">
+                <div class="pain-card__icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                </div>
+                <h3 class="pain-card__title">Bad Existing Tools</h3>
+                <p class="pain-card__problem">You've tried analytics tools before, but they show data without telling you what to actually do with it.</p>
+                <p class="pain-card__solution">Unlike competitors, we provide weekly AI-generated insights with specific, actionable strategies.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section class="section" id="how-it-works" style="background: var(--bg-secondary);">
+    <div class="container">
+        <div class="section__header fade-up">
+            <div class="section__label">How It Works</div>
+            <h2 class="section__title">Get Started in Minutes</h2>
+            <p class="section__subtitle">No complex setup. No data science degree required. Just connect and grow.</p>
+        </div>
+        <div class="steps">
+            <div class="step fade-up">
+                <div class="step__number">1</div>
+                <h3 class="step__title">Connect Your Accounts</h3>
+                <p class="step__desc">Link your Shopify, Google Ads, Facebook Ads, and CRM accounts. We automatically pull and synchronize all your data.</p>
+            </div>
+            <div class="step fade-up">
+                <div class="step__number">2</div>
+                <h3 class="step__title">Get AI-Powered Insights</h3>
+                <p class="step__desc">Our AI analyzes your real-time data and delivers personalized weekly insights with actionable strategies to grow.</p>
+            </div>
+            <div class="step fade-up">
+                <div class="step__number">3</div>
+                <h3 class="step__title">Grow Your Business</h3>
+                <p class="step__desc">Optimize your ad spend, identify top-performing products, and seize growth opportunities before your competitors do.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features -->
+<section class="section" id="features">
+    <div class="container">
+        <div class="section__header fade-up">
+            <div class="section__label">Features</div>
+            <h2 class="section__title">Everything You Need to Scale</h2>
+            <p class="section__subtitle">Powerful features designed for D2C brands that want to make data-driven decisions.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card fade-up">
+                <div class="feature-card__icon">
+                    <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                </div>
+                <h3 class="feature-card__title">Automated Data Integration</h3>
+                <p class="feature-card__desc">Connect Shopify, Google Ads, Facebook Ads, and CRM. Your data is automatically pulled and synced &mdash; no manual work needed.</p>
+            </div>
+            <div class="feature-card fade-up">
+                <div class="feature-card__icon">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                </div>
+                <h3 class="feature-card__title">Intuitive Dashboard</h3>
+                <p class="feature-card__desc">See your key metrics at a glance. Our user-friendly dashboard visualizes performance in a clear, comprehensive format.</p>
+            </div>
+            <div class="feature-card fade-up">
+                <div class="feature-card__icon">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                </div>
+                <h3 class="feature-card__title">Actionable Insights</h3>
+                <p class="feature-card__desc">Go beyond charts and graphs. Get specific recommendations to identify underperforming products and optimize ad spend.</p>
+            </div>
+            <div class="feature-card fade-up">
+                <div class="feature-card__icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0110 10c0 5.52-4.48 10-10 10S2 17.52 2 12"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <h3 class="feature-card__title">Weekly AI Insights</h3>
+                <p class="feature-card__desc">Every week, receive personalized strategies powered by advanced AI. Based on your real-time data, not generic advice.</p>
+            </div>
+            <div class="feature-card fade-up">
+                <div class="feature-card__icon">
+                    <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+                </div>
+                <h3 class="feature-card__title">Customizable Alerts</h3>
+                <p class="feature-card__desc">Set alerts for the metrics that matter. Get notified via email, SMS, or push when something important changes in your business.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Use Cases -->
+<section class="section" id="use-cases" style="background: var(--bg-secondary);">
+    <div class="container">
+        <div class="section__header fade-up">
+            <div class="section__label">Built for D2C Brands</div>
+            <h2 class="section__title">How Brands Use XO Analytics</h2>
+            <p class="section__subtitle">Real scenarios for D2C brands selling on Shopify with Instagram, Facebook, and Google as acquisition channels.</p>
+        </div>
+        <div class="usecase-grid">
+            <div class="usecase-card fade-up">
+                <div class="usecase-card__num">01</div>
+                <div>
+                    <h3 class="usecase-card__title">Sales Performance Analysis</h3>
+                    <p class="usecase-card__desc">Get a clear overview of total sales, average order value, and growth rate across Shopify and your own website &mdash; all in one dashboard.</p>
+                </div>
+            </div>
+            <div class="usecase-card fade-up">
+                <div class="usecase-card__num">02</div>
+                <div>
+                    <h3 class="usecase-card__title">Ad Spend Optimization</h3>
+                    <p class="usecase-card__desc">Connect IG, FB, and Google Ads to get insights on which campaigns drive revenue and specific recommendations to improve ROAS.</p>
+                </div>
+            </div>
+            <div class="usecase-card fade-up">
+                <div class="usecase-card__num">03</div>
+                <div>
+                    <h3 class="usecase-card__title">Product Performance Insights</h3>
+                    <p class="usecase-card__desc">Identify underperforming products quickly. See what's not selling and take action &mdash; adjust pricing, boost promotion, or cut losses.</p>
+                </div>
+            </div>
+            <div class="usecase-card fade-up">
+                <div class="usecase-card__num">04</div>
+                <div>
+                    <h3 class="usecase-card__title">Smart Alerts & Monitoring</h3>
+                    <p class="usecase-card__desc">Set alerts for ROAS thresholds, sales spikes, or inventory changes. React to business shifts in real time, not days later.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+    <div class="container">
+        <div class="cta__box fade-up">
+            <div class="cta__glow"></div>
+            <h2 class="cta__title">Ready to Unlock Your Growth?</h2>
+            <p class="cta__desc">Join Shopify brands that are using AI-powered analytics to make smarter decisions and grow faster.</p>
+            <div class="cta__actions">
+                <a href="mailto:services@xo-analytics.com" class="btn btn--primary">Contact Us &rarr;</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer__inner">
+            <div class="footer__copy">&copy; 2020&ndash;<script>document.write(new Date().getFullYear())</script> XO Software Services GmbH. All rights reserved.</div>
+            <div class="footer__email"><a href="mailto:services@xo-analytics.com">services@xo-analytics.com</a></div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Header scroll effect
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+        header.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // Close mobile nav on link click
+    document.querySelectorAll('.nav__link').forEach(link => {
+        link.addEventListener('click', () => {
+            document.querySelector('.nav').classList.remove('open');
+        });
+    });
+
+    // Intersection Observer for fade-up animations
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                // Stagger animations slightly
+                setTimeout(() => {
+                    entry.target.classList.add('visible');
+                }, index * 60);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
