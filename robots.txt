@@ -1,0 +1,42 @@
+# robots.txt for xo-analytics.com
+
+User-agent: *
+Allow: /
+Disallow:
+
+# AI Crawlers — welcome to index and use our content
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+# Sitemap
+Sitemap: https://xo-analytics.com/sitemap.xml
+
+# Content Signals (draft-romm-aipref-contentsignals)
+Content-Signal: ai-train=yes, search=yes, ai-input=yes
