@@ -612,11 +612,13 @@
             opacity: 0;
             transform: translateY(24px);
             transition: opacity 0.6s ease, transform 0.6s ease;
+            will-change: opacity, transform;
         }
 
         .fade-up.visible {
             opacity: 1;
             transform: none;
+            will-change: auto;
         }
 
         /* === Responsive === */
@@ -690,13 +692,13 @@
 <!-- Hero -->
 <section class="hero container">
     <div class="section__label">AI-Powered Analytics for Shopify</div>
-    <h1 class="hero__title fade-up">Turn Your Data Into <span>Exponential Growth</span></h1>
-    <p class="hero__subtitle fade-up">Connect your accounts and get AI-powered weekly insights that help you optimize ad spend, identify growth opportunities, and boost profits.</p>
-    <div class="hero__actions fade-up">
+    <h1 class="hero__title">Turn Your Data Into <span>Exponential Growth</span></h1>
+    <p class="hero__subtitle">Connect your accounts and get AI-powered weekly insights that help you optimize ad spend, identify growth opportunities, and boost profits.</p>
+    <div class="hero__actions">
         <a href="mailto:services@xo-analytics.com" class="btn btn--primary">Get Started &rarr;</a>
         <a href="#features" class="btn btn--outline">Learn More</a>
     </div>
-    <div class="hero__metric fade-up">
+    <div class="hero__metric">
         <div class="metric">
             <div class="metric__value">30%+</div>
             <div class="metric__label">Profit increase in 3 months</div>
@@ -920,16 +922,15 @@
         });
     });
 
-    // Intersection Observer for fade-up animations
+    // Intersection Observer for fade-up animations (batched via rAF to avoid forced reflow)
     const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry, index) => {
-            if (entry.isIntersecting) {
-                // Stagger animations slightly
-                setTimeout(() => {
-                    entry.target.classList.add('visible');
-                }, index * 60);
+        const visible = entries.filter(e => e.isIntersecting);
+        if (!visible.length) return;
+        requestAnimationFrame(() => {
+            visible.forEach(entry => {
+                entry.target.classList.add('visible');
                 observer.unobserve(entry.target);
-            }
+            });
         });
     }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
